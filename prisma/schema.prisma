@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Products {
+  id                Int       @id @default(autoincrement())
+  name              String    @db.VarChar(255)
+  description       String?
+  specifications    String?
+  price             Decimal   @db.Decimal(10, 2)
+  imageUrl          String?   @db.VarChar(255)  // URL for the product image
+  discountType      DiscountType?   // Type of discount (e.g., percentage or fixed)
+  discountValue     Decimal?        // Value of the discount
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
