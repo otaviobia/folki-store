@@ -8,14 +8,25 @@ datasource db {
 }
 
 model Products {
-  id                Int       @id @default(autoincrement())
-  name              String    @db.VarChar(255)
-  description       String?
-  specifications    String?
-  price             Decimal   @db.Decimal(10, 2)
-  imageUrl          String?   @db.VarChar(255)  // URL for the product image
-  discountType      DiscountType?   // Type of discount (e.g., percentage or fixed)
-  discountValue     Decimal?        // Value of the discount
+  id             Int           @id(map: "id") @default(autoincrement())
+  slug           String        @unique(map: "slug_unique") @db.VarChar(255)
+  name           String        @db.VarChar(255)
+  description    String
+  specifications String
+  price          Decimal       @db.Decimal(5, 2)
+  image_url      String        @db.VarChar(255)
+  discount_type  DiscountType?
+  discount_value Decimal?      @db.Decimal(5, 2)
+  category_id    Int
+  stock          Int
+  Categories     Categories    @relation(fields: [category_id], references: [id], onUpdate: NoAction, map: "product_category_id_fkey")
+}
+
+model Categories {
+  id       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(255)
+  slug     String     @unique(map: "category_slug") @db.VarChar(255)
+  Products Products[]
 }
 
 enum DiscountType {

@@ -1,13 +1,21 @@
-import Header from '@/components/Header';
-import Hero from '@/components/Hero';
-import ProductList from '@/components/ProductList';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 import { Decimal } from '@prisma/client/runtime/library';
-import { Product } from '@/lib/types';
+import { formatPrice } from '@/lib/functions';
 import { Prisma as prisma } from '@/lib/prismaclient';
+import { Product } from '@/lib/types';
+import ProductList from '@/components/ProductList';
 
-async function fetchProducts(): Promise<Product[]> {
-  const productsFromDb = await prisma.products.findMany();
+interface ProductPageProps {
+  params: {
+    id: string;
+  };
+}
+
+async function fetchProductsByCategory(category_id: number): Promise<Product[]> {
+  const productsFromDb = await prisma.products.findMany({
+    where: { category_id: category_id}
+  });
 
   return productsFromDb.map((product) => ({
     productId: product.id,
@@ -24,17 +32,26 @@ async function fetchProducts(): Promise<Product[]> {
   }));
 }
 
-export default async function Home() {
-  const products = await fetchProducts();
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { id } = await params;
+  
+  const category = await prisma.categories.findUnique({
+    where: { slug: id },
+  });
+
+  if (!category) {
+    return (
+      <div>
+        Categoria não encontrada...
+      </div>
+    );
+  }
+
+  const products = await fetchProductsByCategory(category.id);
 
   return (
     <div className="flex flex-col justify-center items-center bg-folki-dark-grey gap-3 p-2">
       <Header />
-      <Hero
-        heroImageUrl="https://cdn.otavio.fun/folki/hero.png"
-        heroText="Descontos de até 20% em toda a loja!"
-        heroTitle="Super Promoção de Inauguração"
-      />
       <ProductList products={products} />
       <Footer />
     </div>
