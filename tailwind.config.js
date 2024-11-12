@@ -11,7 +11,16 @@ module.exports = {
         'folki-dark-grey': '#121212',
         'folki-grey': '#232323',
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            '*': {
+              'color': 'white',
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }

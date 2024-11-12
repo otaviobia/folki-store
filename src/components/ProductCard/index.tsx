@@ -8,17 +8,17 @@ type ProductCardProps = {
   productImageUrl: string;
   productOldPrice?: Decimal;
   productPrice: Decimal;
-  uuid: string;
+  slug: string;
 };
 
 export default function ProductCard(props: ProductCardProps) {
   return (
     <div className="bg-folki-grey rounded-lg w-96 h-auto">
-      <Link href={`/produto/${props.uuid}`}>
+      <Link href={`/produto/${props.slug}`}>
         <img className="rounded-t-lg" src={props.productImageUrl} alt={props.productName} width={500} height={500}/>
       </Link>
       <div className="p-3 flex flex-col justify-between h-36">
-      <Link href={`/produto/${props.uuid}`}>
+      <Link href={`/produto/${props.slug}`}>
         <p className="font-semibold text-lg text-ellipsis line-clamp-2 pb-4">{props.productName}</p>
       </Link>
         {props.productOldPrice != undefined && 

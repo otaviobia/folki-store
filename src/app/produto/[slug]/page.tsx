@@ -1,8 +1,11 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import { Prisma as prisma } from '@/lib/prismaclient';
+import { getProductBySlug } from '@/lib/prismaclient';
 import { Decimal } from '@prisma/client/runtime/library';
 import { formatPrice } from '@/lib/functions';
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm';
+import AddToCartButton from '@/components/AddToCartButton';
 
 interface ProductPageProps {
   params: {
@@ -13,9 +16,7 @@ interface ProductPageProps {
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
   
-  const product = await prisma.products.findUnique({
-    where: { slug: slug },
-  });
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     return (
@@ -24,6 +25,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
     );
   }
+  
+  const prod_price: number = product.price.toNumber();
 
   return (
     <div className="flex flex-col justify-center items-center bg-folki-dark-grey gap-3 p-2">
@@ -50,16 +53,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <p className='text-2xl'>{product.description}</p>
           </div>
           <div className='flex flex-col items-center gap-2'>
-            {product.stock !== 0 ? <button className='bg-folki-purple p-3 pl-10 pr-10 rounded-[40] text-xl'>Adicionar ao Carrinho</button> : ''}
+            {product.stock !== 0 ? <AddToCartButton id={product.id} name={product.name} price={prod_price} /> : ''}
             {product.stock === 0 ? <p>Produto indisponível.</p>
             : product.stock === 1 ? <p>Última unidade disponível!</p>
             : <p>{product.stock} unidades disponíveis</p>}
-          </div>       
+          </div>     
         </div>
       </div>
-      <div className='w-full max-w-[1600]'>
-        <p className='whitespace-pre-line text-xl'>{product.specifications || 'N/A'}</p>
-      </div>
+      {product.specifications && 
+      <div className='w-full max-w-[1600] p-6 bg-folki-grey rounded-lg'>
+        <div className="prose prose-lg max-w-none">
+          <Markdown remarkPlugins={[remarkGfm]}>{product.specifications}</Markdown>
+        </div>
+      </div>}
       <Footer />
     </div>
   );

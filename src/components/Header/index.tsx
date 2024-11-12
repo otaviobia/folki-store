@@ -1,6 +1,11 @@
+"use client";
+
+import useCartStore from "@/store/cart";
 import Link from "next/link";
 
-export default function Header() {
+const Header: React.FC = () => {
+  const cart = useCartStore((state) => state.cart);
+
   return (
     <div className="bg-folki-purple rounded-lg w-full max-w-[1600] p-6 flex justify-between">
       <div className="flex gap-6 items-center">
@@ -13,8 +18,16 @@ export default function Header() {
       </div>
       <div className="flex justify-between items-center gap-4">
         <a href="#"><img src="/profile.svg" alt="Perfil" className="w-8 h-8 inline-block rounded-full hover:brightness-75" /></a>
-        <a href="#"><img src="/cart.svg" alt="Carrinho" className="w-8 h-8 inline-block hover:brightness-75" /></a>
+        <Link href={`/carrinho`}><img src="/cart.svg" alt="Carrinho" className="w-8 h-8 inline-block hover:brightness-75" />
+        {cart.length !== 0 && (
+          <span className="inline-flex items-center justify-center w-auto p-2 h-4 ms-2 text-xs font-semibold text-folki-purple bg-white rounded-full">
+            {cart.length}
+          </span>
+        )}
+        </Link>
       </div>
     </div>
-  )
+  );
 }
+
+export default Header;

@@ -16,7 +16,7 @@ export default function ProductList(props: ProductListProps) {
           productImageUrl={product.productImageUrl}
           productOldPrice={product.productOldPrice}
           productPrice={product.productPrice}
-          uuid={product.slug}
+          slug={product.slug}
         />
       ))}
     </div>

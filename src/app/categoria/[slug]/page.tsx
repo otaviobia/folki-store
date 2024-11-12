@@ -1,7 +1,6 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { Decimal } from '@prisma/client/runtime/library';
-import { formatPrice } from '@/lib/functions';
 import { Prisma as prisma } from '@/lib/prismaclient';
 import { Product } from '@/lib/types';
 import ProductList from '@/components/ProductList';
