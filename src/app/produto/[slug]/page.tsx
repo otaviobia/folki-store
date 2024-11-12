@@ -6,15 +6,15 @@ import { formatPrice } from '@/lib/functions';
 
 interface ProductPageProps {
   params: {
-    id: string;
+    slug: string;
   };
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { id } = await params;
+  const { slug } = await params;
   
   const product = await prisma.products.findUnique({
-    where: { slug: id },
+    where: { slug: slug },
   });
 
   if (!product) {

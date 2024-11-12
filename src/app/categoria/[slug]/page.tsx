@@ -6,9 +6,9 @@ import { Prisma as prisma } from '@/lib/prismaclient';
 import { Product } from '@/lib/types';
 import ProductList from '@/components/ProductList';
 
-interface ProductPageProps {
+interface CategoryPageProps {
   params: {
-    id: string;
+    slug: string;
   };
 }
 
@@ -32,11 +32,11 @@ async function fetchProductsByCategory(category_id: number): Promise<Product[]> 
   }));
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
-  const { id } = await params;
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { slug } = await params;
   
   const category = await prisma.categories.findUnique({
-    where: { slug: id },
+    where: { slug: slug },
   });
 
   if (!category) {
